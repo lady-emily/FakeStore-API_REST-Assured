@@ -1,11 +1,9 @@
-package com.example.tests.products;
+package com.example.tests.users;
 
 import com.example.base.BaseTest;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
 
 import static io.restassured.RestAssured.given;
 
