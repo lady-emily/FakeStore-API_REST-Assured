@@ -9,12 +9,12 @@ import java.util.ArrayList;
 
 import static io.restassured.RestAssured.given;
 
-public class GetAllProductsTests extends BaseTest {
+public class GetAllCartsTests extends BaseTest {
 
     @Test
     public void validateStatusCode() {
         Response response = given()
-                .when().get("/products")
+                .when().get("/carts")
                 .then()
                 .extract().response();
 
@@ -24,7 +24,7 @@ public class GetAllProductsTests extends BaseTest {
     @Test
     public void validateContentTypeHeader() {
         Response response = given()
-                .when().get("/products")
+                .when().get("/carts")
                 .then()
                 .extract().response();
 
@@ -34,7 +34,7 @@ public class GetAllProductsTests extends BaseTest {
     @Test
     public void validateJSONSchema(){
         Response response = given()
-                .when().get("/products")
+                .when().get("/carts")
                 .then()
                 .extract().response();
 

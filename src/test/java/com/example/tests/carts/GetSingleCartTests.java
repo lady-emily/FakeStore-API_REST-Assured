@@ -7,11 +7,11 @@ import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
 
-public class GetSingleProductTests extends BaseTest {
+public class GetSingleCartTests extends BaseTest {
     @Test
     public void validateStatusCode(){
         Response response = given()
-                .when().get("/products/1")
+                .when().get("/carts/1")
                 .then()
                 .extract().response();
 
@@ -21,7 +21,7 @@ public class GetSingleProductTests extends BaseTest {
     @Test
     public void validateContentTypeHeader(){
             Response response = given()
-                    .when().get("/products/1")
+                    .when().get("/carts/1")
                     .then()
                     .extract().response();
 
@@ -31,7 +31,7 @@ public class GetSingleProductTests extends BaseTest {
     @Test
     public void validateJSONSchema(){
         Response response = given()
-                .when().get("/products/1")
+                .when().get("/carts/1")
                 .then()
                 .extract().response();
 
