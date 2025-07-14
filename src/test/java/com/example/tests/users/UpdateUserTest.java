@@ -28,7 +28,7 @@ public class UpdateUserTest extends BaseTest {
                 .when()
                 .put("/users/1");
 
-        System.out.println("Response is: " + response.asPrettyString());
+//        System.out.println("Response is: " + response.asPrettyString());
         Assert.assertEquals(response.statusCode(), 200);
     }
 

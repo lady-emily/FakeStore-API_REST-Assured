@@ -53,7 +53,7 @@ public class UpdateProductTests extends BaseTest {
                 .when()
                 .put("/products/21");
 
-        System.out.println(response.asPrettyString());
+//        System.out.println(response.asPrettyString());
         Assert.assertTrue(response.asPrettyString().startsWith("{"));
         Assert.assertTrue(response.asPrettyString().endsWith("}"));
     }

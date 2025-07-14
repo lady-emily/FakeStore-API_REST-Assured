@@ -31,7 +31,7 @@ public class AddNewCartTests extends BaseTest {
                 .when()
                 .post("/carts");
 
-        System.out.println("statusCode: " + response.getStatusCode());
+//        System.out.println("statusCode: " + response.getStatusCode());
         Assert.assertEquals(response.statusCode(), 201, "response status code is wrong");
     }
 

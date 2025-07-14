@@ -25,7 +25,7 @@ public class GetSingleUserTest extends BaseTest {
                 .then()
                 .extract().response();
 
-        System.out.println("Response is: " + response.asPrettyString());
+//        System.out.println("Response is: " + response.asPrettyString());
 
         Assert.assertTrue(response.getHeader("Content-Type").contains("application/json"));
     }
