@@ -1,27 +1,71 @@
-#name: REST Assured Tests
-#
-#on:
-#  push:
-#    branches: [ main ]
-#  pull_request:
-#    branches: [ main ]
-#
-#jobs:
-#  test:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout repo
-#        uses: actions/checkout@v2
-#
-#      - name: Set up JDK
-#        uses: actions/setup-java@v2
-#        with:
-#          java-version: '17'
-#
-#      - name: Build and Test
-#        run: mvn clean test
-#
-#      - name: Generate Allure Report
-#        run: |
-#          mkdir -p allure-results
-#          mvn allure:report
+name: REST Assured Tests
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '23'
+          distribution: 'temurin'
+
+      - name: Build and Test
+        run: mvn clean test
+
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          mkdir -p allure-results
+          mvn allure:report
+
+      - name: Slack Success Notification
+        if: success()
+        uses: slackapi/slack-github-action@v1.24.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          payload: |
+            {
+              "text": "✅ Workflow *${{ github.workflow }}* succeeded!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🎉 *Build Succeeded* \n*Repo:* <https://github.com/${{ github.repository }}|${{ github.repository }}> \n*Branch:* `${{ github.ref }}` \n*Commit:* <https://github.com/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
+                  }
+                }
+              ]
+            }
+
+      - name: Send Failure Email
+        if: failure()
+        run: |
+          curl --ssl-reqd \
+            --url '${{ secrets.SMTP_URL }}' \
+            --user '${{ secrets.SMTP_USERNAME }}:${{ secrets.SMTP_PASSWORD }}' \
+            --mail-from 'your.email@gmail.com' \
+            --mail-rcpt '${{ secrets.EMAIL_TO }}' \
+            --upload-file - <<EOF
+          From: GitHub Actions <your.email@gmail.com>
+          To: ${{ secrets.EMAIL_TO }}
+          Subject: Workflow Failed
+          Content-Type: text/html; charset="utf-8"
+          
+          <html>
+            <body>
+              <h2 style="color:#d73a49;">❌ Workflow Failed</h2>
+              <p><strong>Repository:</strong> ${{ github.repository }}</p>
+              <p><strong>Workflow:</strong> ${{ github.workflow }}</p>
+              <p><a href="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}">Click here to debug</a></p>
+            </body>
+          </html>
+          EOF
