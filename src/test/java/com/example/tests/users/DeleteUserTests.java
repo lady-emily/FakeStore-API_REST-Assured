@@ -8,14 +8,14 @@ import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
 
-public class DeleteProductTests extends BaseTest {
+public class DeleteUserTests extends BaseTest {
 
     @Test
     public void validateStatusCode() {
         Response response = given()
                 .contentType(ContentType.JSON)
                 .when()
-                .delete("/products/21");
+                .delete("/users/1");
 
         Assert.assertEquals(response.statusCode(), 200);
     }

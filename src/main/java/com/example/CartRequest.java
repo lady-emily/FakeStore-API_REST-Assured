@@ -5,9 +5,11 @@ import java.util.List;
 public class CartRequest {
     private int id;
     private int userId;
-    private List<Object> products;
+    private List<Product> products;
 
-    public CartRequest() {
+    public CartRequest(int userId, List<Product> products) {
+        this.userId = userId;
+        this.products = products;
     }
 
     public int getId() {
@@ -26,11 +28,11 @@ public class CartRequest {
         this.userId = userId;
     }
 
-    public List<Object> getProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Object> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
     }
 
@@ -42,8 +44,7 @@ public class CartRequest {
         "id": %d,
         "userId": %d,
         "products": "%s"
-         }
+        }
         """, getId(), getUserId(), getProducts());
     }
 }
-

@@ -1,6 +1,5 @@
 package com.example;
 
-import java.lang.reflect.Array;
 import java.util.List;
 
 public class Cart {
@@ -39,12 +38,10 @@ public class Cart {
     public String toString(){
         return String.format("""
                              {
-                               "id": %d,
-                               "userId": %d,
-                               "products": "%s"
+                             "id": %d,
+                             "userId": %d,
+                             "products": "%s"
                              }
                              """, this.getId(), this.getUserId(), this.getProducts());
     }
 }
-
-

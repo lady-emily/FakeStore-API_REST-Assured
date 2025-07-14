@@ -1,41 +1,38 @@
 package com.example.tests.carts;
 
 import com.example.Cart;
+import com.example.CartRequest;
 import com.example.Product;
 import com.example.base.BaseTest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
 public class AddNewCartTests extends BaseTest {
-    static String requestBody = """
-            {
-               "id": 1,
-               "userId": 1,
-               "products": [
-                 {
-                   "id": 1,
-                   "title": "T-Shirts",
-                   "price": 54.90,
-                   "description": "shirts for all weather",
-                   "category": "tops",
-                   "image": "http://example.com"
-                 }
-               ]
-            }
-            """;
+    private static CartRequest requestBody;
+
+    @BeforeClass
+    public void setup() {
+        Product product = new Product(1, "T-Shirts", 54.90f, "shirts for all weather", "tops", "http://example.com");
+        requestBody = new CartRequest(1, List.of(product));
+    }
 
     @Test
     public void validateStatusCode() {
         Response response = given()
+                .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
                 .post("/carts");
 
-        Assert.assertEquals(response.statusCode(), 201);
+        System.out.println("statusCode: " + response.getStatusCode());
+        Assert.assertEquals(response.statusCode(), 201, "response status code is wrong");
     }
 
     @Test
@@ -47,8 +44,9 @@ public class AddNewCartTests extends BaseTest {
                 .post("/carts");
 
         Cart cart = response.as(Cart.class);
-        System.out.println("Response is "+cart.toString() );
-//        Assert.assertEquals(cart.toString(), AddNewCartTests.requestBody);
+        requestBody.setId(cart.getId());
+
+        Assert.assertEquals(requestBody.toString(), cart.toString());
     }
 
     @Test

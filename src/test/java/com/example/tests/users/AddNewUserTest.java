@@ -1,6 +1,7 @@
 package com.example.tests.users;
 
 import com.example.Product;
+import com.example.User;
 import com.example.base.BaseTest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -9,51 +10,46 @@ import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
 
-public class UpdateProductTests extends BaseTest {
+public class AddNewUserTest extends BaseTest {
     static String requestBody = """
-                {
-                  "id": 21,
-                  "title": "Ripped Jeans",
-                  "price": 60.99,
-                  "description": "High-quality headphones with noise cancellation",
-                  "category": "electronics",
-                  "image": "http://example.com/images/headphones.jpg"
-                }
-                """;
-
+            {
+                "username": "user1",
+                "email": "user1@gmail.com",
+                "password": "user1_password"
+            }
+            """;
     @Test
     public void validateStatusCode() {
         Response response = given()
-                .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
-                .put("/products/21");
+                .post("/users");
 
-        Assert.assertEquals(response.statusCode(), 200);
+        Assert.assertEquals(response.statusCode(), 201);
     }
 
     @Test
     public void validateResponseBody(){
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(AddNewProductTests.requestBody)
+                .body(AddNewUserTest.requestBody)
                 .when()
-                .put("/products/21");
+                .post("/users")
+                .then()
+                .extract().response();
 
-        Product product = response.as(Product.class);
-
-        Assert.assertEquals(product.toString(), AddNewProductTests.requestBody);
+        User user = response.as(User.class);
+        Assert.assertNotEquals(user.getId(), 0);
     }
 
     @Test
     public void validateJSONSchema(){
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(AddNewProductTests.requestBody)
+                .body(AddNewUserTest.requestBody)
                 .when()
-                .put("/products/21");
+                .post("/users");
 
-        System.out.println(response.asPrettyString());
         Assert.assertTrue(response.asPrettyString().startsWith("{"));
         Assert.assertTrue(response.asPrettyString().endsWith("}"));
     }
@@ -62,9 +58,9 @@ public class UpdateProductTests extends BaseTest {
     public void validateContentTypeHeader(){
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(AddNewProductTests.requestBody)
+                .body(AddNewUserTest.requestBody)
                 .when()
-                .put("/products/21");
+                .post("/users");
 
         Assert.assertTrue(response.getHeader("Content-Type").contains("application/json"));
     }

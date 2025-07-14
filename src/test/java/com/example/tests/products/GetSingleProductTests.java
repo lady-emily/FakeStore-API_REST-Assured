@@ -22,10 +22,10 @@ public class GetSingleProductTests extends BaseTest {
 
     @Test
     public void validateContentTypeHeader(){
-            Response response = given()
-                    .when().get("/products/1")
-                    .then()
-                    .extract().response();
+        Response response = given()
+                .when().get("/products/1")
+                .then()
+                .extract().response();
 
         Assert.assertTrue(response.getHeader("Content-Type").contains("application/json"));
     }

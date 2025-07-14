@@ -1,39 +1,29 @@
 package com.example.tests.carts;
 
 import com.example.Cart;
+import com.example.CartRequest;
+import com.example.Product;
 import com.example.base.BaseTest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
 public class UpdateCartTests extends BaseTest {
-    static String requestBody = """
-            {
-              "id": 101,
-              "userId": 502,
-              "products": [
-                {
-                  "id": 9876,
-                  "title": "Wireless Noise-Cancelling Headphones",
-                  "price": 199.99,
-                  "description": "High-fidelity wireless headphones with active noise cancellation and 30-hour battery life.",
-                  "category": "Electronics",
-                  "image": "https://example.com/images/headphones.jpg"
-                },
-                {
-                  "id": 1234,
-                  "title": "Smart LED Light Bulb",
-                  "price": 24.95,
-                  "description": "Color-changing smart bulb with Wi-Fi control and compatibility with Alexa and Google Home.",
-                  "category": "Home Automation",
-                  "image": "https://example.com/images/smartbulb.jpg"
-                }
-              ]
-            }
-            """;
+    private static CartRequest requestBody;
+
+    @BeforeClass
+    public void setup() {
+        requestBody = new CartRequest(1, List.of(
+                new Product(9876, "Wireless Noise-Cancelling Headphones", 199.99f, "High-fidelity wireless headphones with active noise cancellation and 30-hour battery life.", "Electronics", "https://example.com/images/headphones.jpg"),
+                new Product(1234, "Smart LED Light Bulb", 24.95f, "Color-changing smart bulb with Wi-Fi control and compatibility with Alexa and Google Home.", "Home Automation", "https://example.com/images/smartbulb.jpg")
+        ));
+    }
 
     @Test
     public void validateStatusCode() {
@@ -55,8 +45,9 @@ public class UpdateCartTests extends BaseTest {
                 .put("/carts/1");
 
         Cart cart = response.as(Cart.class);
-        System.out.println("response is "+ cart.toString());
-//        Assert.assertEquals(cart.toString(), UpdateCartTests.requestBody);
+
+        requestBody.setId(cart.getId());
+        Assert.assertEquals(cart.toString(), UpdateCartTests.requestBody.toString());
     }
 
     @Test
@@ -67,7 +58,6 @@ public class UpdateCartTests extends BaseTest {
                 .when()
                 .put("/carts/1");
 
-        System.out.println(response.asPrettyString());
         Assert.assertTrue(response.asPrettyString().startsWith("{"));
         Assert.assertTrue(response.asPrettyString().endsWith("}"));
     }

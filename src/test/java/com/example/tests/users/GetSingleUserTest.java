@@ -5,28 +5,27 @@ import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-
 import static io.restassured.RestAssured.given;
 
-public class GetAllProductsTests extends BaseTest {
-
+public class GetSingleUserTest extends BaseTest {
     @Test
-    public void validateStatusCode() {
+    public void validateStatusCode(){
         Response response = given()
-                .when().get("/products")
+                .when().get("/users/1")
                 .then()
                 .extract().response();
 
-        Assert.assertEquals(response.statusCode(), 200);
+        Assert.assertEquals(response.statusCode(),200);
     }
 
     @Test
-    public void validateContentTypeHeader() {
+    public void validateContentTypeHeader(){
         Response response = given()
-                .when().get("/products")
+                .when().get("/users/1")
                 .then()
                 .extract().response();
+
+        System.out.println("Response is: " + response.asPrettyString());
 
         Assert.assertTrue(response.getHeader("Content-Type").contains("application/json"));
     }
@@ -34,12 +33,11 @@ public class GetAllProductsTests extends BaseTest {
     @Test
     public void validateJSONSchema(){
         Response response = given()
-                .when().get("/products")
+                .when().get("/users/1")
                 .then()
                 .extract().response();
 
-        Object responseBody = response.jsonPath().get();
-        Assert.assertNotNull(responseBody, "****** Response body must not be  null");
-        Assert.assertTrue(responseBody instanceof ArrayList, "****** Response body must be an array");
+        Assert.assertTrue(response.asPrettyString().startsWith("{"));
+        Assert.assertTrue(response.asPrettyString().endsWith("}"));
     }
 }

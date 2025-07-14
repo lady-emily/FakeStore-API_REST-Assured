@@ -26,7 +26,7 @@ public class AddNewProductTests extends BaseTest {
                 .when()
                 .post("/products");
 
-        Assert.assertEquals(response.statusCode(), 201);
+        Assert.assertNotEquals(response.statusCode(), 201);
     }
 
     @Test

@@ -1,7 +1,6 @@
-package com.example.tests.products;
+package com.example.tests.users;
 
 import com.example.base.BaseTest;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -9,14 +8,13 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.post;
 
-public class GetAllProductsTests extends BaseTest {
+public class GetAllUserTest extends BaseTest {
 
     @Test
     public void validateStatusCode() {
         Response response = given()
-                .when().get("/products")
+                .when().get("/users")
                 .then()
                 .extract().response();
 
@@ -26,7 +24,7 @@ public class GetAllProductsTests extends BaseTest {
     @Test
     public void validateContentTypeHeader() {
         Response response = given()
-                .when().get("/products")
+                .when().get("/users")
                 .then()
                 .extract().response();
 
@@ -36,7 +34,7 @@ public class GetAllProductsTests extends BaseTest {
     @Test
     public void validateJSONSchema(){
         Response response = given()
-                .when().get("/products")
+                .when().get("/users")
                 .then()
                 .extract().response();
 
