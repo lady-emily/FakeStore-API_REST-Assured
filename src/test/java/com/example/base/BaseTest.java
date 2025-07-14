@@ -17,5 +17,9 @@ public class BaseTest {
         }
         RestAssured.baseURI = baseUrl;
         System.out.println("Base URI set to: " + RestAssured.baseURI);
+
+        RestAssured.requestSpecification = RestAssured
+                .given()
+                .header("User-Agent", "Mozilla/5.0 (compatible; GitHub Actions)");
     }
 }
