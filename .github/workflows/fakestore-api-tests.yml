@@ -7,6 +7,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    env:
+      BASE_URL: https://fakestoreapi.com
+      # Add other env variables here if needed
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -19,6 +24,13 @@ jobs:
 
       - name: Build and Test
         run: mvn clean test
+
+      - name: Upload Surefire Reports (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: surefire-reports
+          path: target/surefire-reports
 
       - name: Generate Allure Report
         if: always()
