@@ -85,7 +85,7 @@
     <build>
         <plugins>
             <!-- Maven Surefire Plugin (Required for running TestNG tests) -->
-            <plugin>
+<!--             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
@@ -95,7 +95,7 @@
                     </suiteXmlFiles>
                 </configuration>
             </plugin>
-
+ -->
             <!-- Allure Maven Plugin for generating reports -->
             <plugin>
                 <groupId>io.qameta.allure</groupId>
