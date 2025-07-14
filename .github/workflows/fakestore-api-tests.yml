@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - main
-      - master
   pull_request:
     branches:
       - main
-      - master
 
 jobs:
   test:
@@ -17,7 +15,7 @@ jobs:
       BASE_URL: https://fakestoreapi.com
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Set up JDK
         uses: actions/setup-java@v2
