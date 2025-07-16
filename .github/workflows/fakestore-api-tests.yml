@@ -2,76 +2,90 @@ name: REST Assured Tests
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      BASE_URL: https://fakestoreapi.com
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: '23'
           distribution: 'temurin'
 
       - name: Build and Test
-        run: mvn clean test
+        run: mvn test -Dsurefire.testng.properties.listeners=io.qameta.allure.testng.AllureTestNg
 
-#      - name: Generate Allure Report
-#        if: always()
-#        run: |
-#          mkdir -p allure-results
-#          mvn allure:report
-#
-#      - name: Slack Success Notification
-#        if: success()
-#        uses: slackapi/slack-github-action@v1.24.0
-#        env:
-#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-#        with:
-#          payload: |
-#            {
-#              "text": "✅ Workflow *${{ github.workflow }}* succeeded!",
-#              "blocks": [
-#                {
-#                  "type": "section",
-#                  "text": {
-#                    "type": "mrkdwn",
-#                    "text": "🎉 *Build Succeeded* \n*Repo:* <https://github.com/${{ github.repository }}|${{ github.repository }}> \n*Branch:* `${{ github.ref }}` \n*Commit:* <https://github.com/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
-#                  }
-#                }
-#              ]
-#            }
-#
-#      - name: Send Failure Email
-#        if: failure()
-#        run: |
-#          curl --ssl-reqd \
-#            --url '${{ secrets.SMTP_URL }}' \
-#            --user '${{ secrets.SMTP_USERNAME }}:${{ secrets.SMTP_PASSWORD }}' \
-#            --mail-from 'your.email@gmail.com' \
-#            --mail-rcpt '${{ secrets.EMAIL_TO }}' \
-#            --upload-file - <<EOF
-#          From: GitHub Actions <your.email@gmail.com>
-#          To: ${{ secrets.EMAIL_TO }}
-#          Subject: Workflow Failed
-#          Content-Type: text/html; charset="utf-8"
-#
-#          <html>
-#            <body>
-#              <h2 style="color:#d73a49;">❌ Workflow Failed</h2>
-#              <p><strong>Repository:</strong> ${{ github.repository }}</p>
-#              <p><strong>Workflow:</strong> ${{ github.workflow }}</p>
-#              <p><a href="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}">Click here to debug</a></p>
-#            </body>
-#          </html>
-#          EOF
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          mkdir -p allure-results
+          mvn allure:report
+
+      - name: Login to Docker Hub
+        if: always()
+        uses: docker/login-action@v3.4.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+          logout: true
+
+      - name: Build and push Docker images
+        if: always()
+        uses: docker/build-push-action@v6.18.0
+        with:
+          build-args: VERSION=1.0
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: kingsleyacquah/fakestore-image:v2-latest
+
+      - name: Slack Success Notification
+        if: success()
+        uses: slackapi/slack-github-action@v1.24.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          payload: |
+            {
+              "text": "✅ Workflow *${{ github.workflow }}* succeeded!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🎉 *Build Succeeded* \n*Repo:* <https://github.com/${{ github.repository }}|${{ github.repository }}> \n*Branch:* `${{ github.ref }}` \n*Commit:* <https://github.com/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
+                  }
+                }
+              ]
+            }
+
+      - name: Send Failure Email
+        if: failure()
+        run: |
+          curl --ssl-reqd \
+            --url '${{ secrets.SMTP_URL }}' \
+            --user '${{ secrets.SMTP_USERNAME }}:${{ secrets.SMTP_PASSWORD }}' \
+            --mail-from 'your.email@gmail.com' \
+            --mail-rcpt '${{ secrets.EMAIL_TO }}' \
+            --upload-file - <<EOF
+          From: GitHub Actions <your.email@gmail.com>
+          To: ${{ secrets.EMAIL_TO }}
+          Subject: Workflow Failed
+          Content-Type: text/html; charset="utf-8"
+          
+          <html>
+            <body>
+              <h2 style="color:#d73a49;">❌ Workflow Failed</h2>
+              <p><strong>Repository:</strong> ${{ github.repository }}</p>
+              <p><strong>Workflow:</strong> ${{ github.workflow }}</p>
+              <p><a href="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}">Click here to debug</a></p>
+            </body>
+          </html>
+          EOF

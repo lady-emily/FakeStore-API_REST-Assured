@@ -9,16 +9,17 @@ import static io.restassured.RestAssured.given;
 
 public class BaseTest {
 
+    protected RequestSpecification requestSpec;
+
     @BeforeClass
     public void setUp() {
-        String baseUrl = System.getenv("BASE_URL");
-        if (baseUrl == null || baseUrl.isEmpty()) {
-            baseUrl = "https://fakestoreapi.com"; // fallback if not set
-        }
-        RestAssured.baseURI = baseUrl;
-        System.out.println("Base URI set to: " + RestAssured.baseURI);
-        RestAssured.requestSpecification = RestAssured
-                .given()
-                .header("User-Agent", "Mozilla/5.0 (compatible; GitHub Actions)");
+        // Set base URI for all tests
+        RestAssured.baseURI = "https://fakestoreapi.com";
+
+        // Reusable request specification
+        requestSpec = given()
+                .log().ifValidationFails(LogDetail.ALL)
+                .header("Accept", "application/json")
+                .contentType("application/json");
     }
 }

@@ -1,27 +1,25 @@
-package com.example.tests.carts;
+package com.example.tests.products;
 
-import com.example.Cart;
-import com.example.CartRequest;
 import com.example.Product;
 import com.example.base.BaseTest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class AddNewCartTests extends BaseTest {
-    private static CartRequest requestBody;
-
-    @BeforeClass
-    public void setup() {
-        Product product = new Product(1, "T-Shirts", 54.90f, "shirts for all weather", "tops", "http://example.com");
-        requestBody = new CartRequest(1, List.of(product));
-    }
+public class UpdateProductTest extends BaseTest {
+    static String requestBody = """
+                {
+                  "id": 21,
+                  "title": "Ripped Jeans",
+                  "price": 60.99,
+                  "description": "High-quality headphones with noise cancellation",
+                  "category": "electronics",
+                  "image": "http://example.com/images/headphones.jpg"
+                }
+                """;
 
     @Test
     public void validateStatusCode() {
@@ -29,33 +27,31 @@ public class AddNewCartTests extends BaseTest {
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
-                .post("/carts");
+                .put("/products/21");
 
-//        System.out.println("statusCode: " + response.getStatusCode());
-        Assert.assertEquals(response.statusCode(), 201, "response status code is wrong");
+        Assert.assertEquals(response.statusCode(), 200);
     }
 
     @Test
     public void validateResponseBody(){
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(AddNewCartTests.requestBody)
+                .body(AddNewProductTest.requestBody)
                 .when()
-                .post("/carts");
+                .put("/products/21");
 
-        Cart cart = response.as(Cart.class);
-        requestBody.setId(cart.getId());
+        Product product = response.as(Product.class);
 
-        Assert.assertEquals(requestBody.toString(), cart.toString());
+        Assert.assertEquals(product.toString(), AddNewProductTest.requestBody);
     }
 
     @Test
     public void validateJSONSchema(){
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(AddNewCartTests.requestBody)
+                .body(AddNewProductTest.requestBody)
                 .when()
-                .post("/carts");
+                .put("/products/21");
 
         Assert.assertTrue(response.asPrettyString().startsWith("{"));
         Assert.assertTrue(response.asPrettyString().endsWith("}"));
@@ -65,9 +61,9 @@ public class AddNewCartTests extends BaseTest {
     public void validateContentTypeHeader(){
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(AddNewCartTests.requestBody)
+                .body(AddNewProductTest.requestBody)
                 .when()
-                .post("/carts");
+                .put("/products/21");
 
         Assert.assertTrue(response.getHeader("Content-Type").contains("application/json"));
     }

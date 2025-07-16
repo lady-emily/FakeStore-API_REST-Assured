@@ -1,6 +1,5 @@
 package com.example.tests.users;
 
-import com.example.Product;
 import com.example.User;
 import com.example.base.BaseTest;
 import io.restassured.http.ContentType;
@@ -28,7 +27,6 @@ public class UpdateUserTest extends BaseTest {
                 .when()
                 .put("/users/1");
 
-//        System.out.println("Response is: " + response.asPrettyString());
         Assert.assertEquals(response.statusCode(), 200);
     }
 
@@ -59,10 +57,12 @@ public class UpdateUserTest extends BaseTest {
     @Test
     public void validateContentTypeHeader(){
         Response response = given()
+                .log().uri()
                 .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
                 .body(UpdateUserTest.requestBody)
                 .when()
-                .put("/products/21");
+                .put("/products/1");
 
         Assert.assertTrue(response.getHeader("Content-Type").contains("application/json"));
     }

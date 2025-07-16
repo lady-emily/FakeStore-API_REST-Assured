@@ -14,7 +14,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class UpdateCartTests extends BaseTest {
+public class UpdateCartTest extends BaseTest {
     private static CartRequest requestBody;
 
     @BeforeClass
@@ -40,21 +40,21 @@ public class UpdateCartTests extends BaseTest {
     public void validateResponseBody(){
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(UpdateCartTests.requestBody)
+                .body(UpdateCartTest.requestBody)
                 .when()
                 .put("/carts/1");
 
         Cart cart = response.as(Cart.class);
 
         requestBody.setId(cart.getId());
-        Assert.assertEquals(cart.toString(), UpdateCartTests.requestBody.toString());
+        Assert.assertEquals(cart.toString(), UpdateCartTest.requestBody.toString());
     }
 
     @Test
     public void validateJSONSchema(){
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(UpdateCartTests.requestBody)
+                .body(UpdateCartTest.requestBody)
                 .when()
                 .put("/carts/1");
 
@@ -66,7 +66,7 @@ public class UpdateCartTests extends BaseTest {
     public void validateContentTypeHeader(){
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(UpdateCartTests.requestBody)
+                .body(UpdateCartTest.requestBody)
                 .when()
                 .put("/carts/1");
 

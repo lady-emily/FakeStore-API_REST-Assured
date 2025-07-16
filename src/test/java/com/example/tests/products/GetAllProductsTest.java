@@ -1,7 +1,6 @@
 package com.example.tests.products;
 
 import com.example.base.BaseTest;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -9,9 +8,8 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.post;
 
-public class GetAllProductsTests extends BaseTest {
+public class GetAllProductsTest extends BaseTest {
 
     @Test
     public void validateStatusCode() {

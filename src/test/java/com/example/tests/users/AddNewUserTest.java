@@ -1,6 +1,5 @@
 package com.example.tests.users;
 
-import com.example.Product;
 import com.example.User;
 import com.example.base.BaseTest;
 import io.restassured.http.ContentType;

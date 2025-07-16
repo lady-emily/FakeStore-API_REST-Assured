@@ -1,4 +1,4 @@
-package com.example.tests.carts;
+package com.example.tests.products;
 
 import com.example.base.BaseTest;
 import io.restassured.http.ContentType;
@@ -8,14 +8,14 @@ import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
 
-public class DeleteCartTests extends BaseTest {
+public class DeleteProductTest extends BaseTest {
 
     @Test
     public void validateStatusCode() {
         Response response = given()
                 .contentType(ContentType.JSON)
                 .when()
-                .delete("/carts/1");
+                .delete("/products/21");
 
         Assert.assertEquals(response.statusCode(), 200);
     }

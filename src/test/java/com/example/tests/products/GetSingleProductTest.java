@@ -5,11 +5,9 @@ import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-
 import static io.restassured.RestAssured.given;
 
-public class GetSingleProductTests extends BaseTest {
+public class GetSingleProductTest extends BaseTest {
     @Test
     public void validateStatusCode(){
         Response response = given()

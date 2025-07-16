@@ -33,7 +33,7 @@ public class CartRequest {
     }
 
     public void setProducts(List<Product> products) {
-        this.products =products;
+        this.products = products;
     }
 
     @Override

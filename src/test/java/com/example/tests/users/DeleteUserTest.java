@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
 
-public class DeleteUserTests extends BaseTest {
+public class DeleteUserTest extends BaseTest {
 
     @Test
     public void validateStatusCode() {
